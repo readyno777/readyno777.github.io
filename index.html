@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Starfire Technology | Global AI Compute & Full-Stack AI Infrastructure</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js CDN -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#070b14',
+                            surface: '#0d1527',
+                            card: '#131e36',
+                            border: '#1e2d4d',
+                            cyan: '#00f0ff',
+                            blue: '#3b82f6',
+                            accent: '#6366f1',
+                            purple: '#8b5cf6',
+                            emerald: '#10b981',
+                        }
+                    },
+                    boxShadow: {
+                        'neon-cyan': '0 0 20px rgba(0, 240, 255, 0.25)',
+                        'neon-blue': '0 0 25px rgba(59, 130, 246, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #070b14;
+            color: #f3f4f6;
+        }
+        .grid-pattern {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        }
+        .glow-radial {
+            background: radial-gradient(circle at 50% 20%, rgba(0, 240, 255, 0.12) 0%, rgba(99, 102, 241, 0.05) 50%, transparent 80%);
+        }
+        .glass-panel {
+            background: rgba(13, 21, 39, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(30, 45, 77, 0.8);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #ffffff 0%, #00f0ff 50%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .text-gradient-cyan {
+            background: linear-gradient(135deg, #ffffff 0%, #00f0ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body x-data="{ 
+    mobileMenuOpen: false,
+    activeTab: 'home',
+    calculator: {
+        gpuType: 'b300',
+        gpuCount: 64,
+        durationMonths: 12,
+        utilizationRate: 85,
+        calculateTCO() {
+            let baseRatePerHour = this.gpuType === 'b300' ? 4.20 : 3.10;
+            let totalHours = this.durationMonths * 30 * 24;
+            let cloudCost = this.gpuCount * (baseRatePerHour * 1.55) * totalHours;
+            let starfireCost = this.gpuCount * baseRatePerHour * totalHours * (1 - (this.durationMonths >= 12 ? 0.20 : 0.08));
+            let savings = cloudCost - starfireCost;
+            return {
+                starfireCost: Math.round(starfireCost).toLocaleString(),
+                cloudCost: Math.round(cloudCost).toLocaleString(),
+                savings: Math.round(savings).toLocaleString(),
+                savingsPercent: Math.round((savings / cloudCost) * 100)
+            };
+        }
+    },
+    quoteWizard: {
+        step: 1,
+        workload: 'LLM Inference & Fine-Tuning',
+        gpus: '64 - 256 GPUs',
+        region: 'Iceland / Europe (Green Power)',
+        commitment: '12 Months Reserved',
+        email: '',
+        submitted: false
+    }
+}" class="font-sans selection:bg-brand-cyan selection:text-black antialiased">
+
+    <!-- Global Background Mesh -->
+    <div class="fixed inset-0 grid-pattern pointer-events-none z-0 opacity-60"></div>
+    <div class="fixed inset-0 glow-radial pointer-events-none z-0"></div>
+
+    <!-- ==========================================
+         TOP GLOBAL NAVIGATION BAR
+    =========================================== -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-brand-border/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Brand Logo -->
+                <a href="#home" class="flex items-center space-x-3 group">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-tr from-brand-cyan via-brand-blue to-brand-purple flex items-center justify-center shadow-neon-cyan group-hover:scale-105 transition-transform">
+                        <i class="fa-solid font-bold text-slate-950 text-xl fa-bolt"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-1.5">
+                            <span class="text-xl font-extrabold tracking-wider text-white font-mono">STARFIRE</span>
+                            <span class="text-xs px-1.5 py-0.5 rounded bg-brand-cyan/20 text-brand-cyan border border-brand-cyan/40 font-mono font-semibold">B300</span>
+                        </div>
+                        <p class="text-[10px] text-gray-400 tracking-wider uppercase font-mono">AI Infra & Compute Solutions</p>
+                    </div>
+                </a>
+
+                <!-- Desktop Navigation Items -->
+                <nav class="hidden lg:flex items-center space-x-1 xl:space-x-2 text-xs font-medium">
+                    <a href="#home" class="px-2.5 py-1.5 rounded-md text-gray-300 hover:text-brand-cyan hover:bg-brand-surface transition-colors">Home</a>
+                    <a href="#about" class="px-2.5 py-1.5 rounded-md text-gray-300 hover:text-brand-cyan hover:bg-brand-surface transition-colors">About Us</a>
+                    <a href="#compute" class="px-2.5 py-1.5 rounded-md text-gray-300 hover:text-brand-cyan hover:bg-brand-surface transition-colors">AI Compute</a>
+                    <a href="#infra" class="px-2.5 py-1.5 rounded-md text-gray-300 hover:text-brand-cyan hover:bg-brand-surface transition-colors">AI Infra</a>
+                    <a href="#optimization" class="px-2.5 py-1.5 rounded-md text-gray-300 hover:text-brand-cyan hover:bg-brand-surface transition-colors">Optimization</a>
+                    <a href="#agentic" class="px-2.5 py-1.5 rounded-md text-gray-300 hover:text-brand-cyan hover:bg-brand-surface transition-colors">Agentic AI</a>
+                    <a href="#delivery" class="px-2.5 py-1.5 rounded-md text-gray-300 hover:text-brand-cyan hover:bg-brand-surface transition-colors">Deployment</a>
+                    <a href="#tco" class="px-2.5 py-1.5 rounded-md text-gray-300 hover:text-brand-cyan hover:bg-brand-surface transition-colors">TCO</a>
+                    <a href="#cases" class="px-2.5 py-1.5 rounded-md text-gray-300 hover:text-brand-cyan hover:bg-brand-surface transition-colors">Case Studies</a>
+                    <a href="#faq" class="px-2.5 py-1.5 rounded-md text-gray-300 hover:text-brand-cyan hover:bg-brand-surface transition-colors">FAQ</a>
+                </nav>
+
+                <!-- Header CTAs -->
+                <div class="hidden lg:flex items-center space-x-3">
+                    <a href="#contact" class="px-4 py-2 rounded-lg bg-gradient-to-r from-brand-cyan to-brand-blue text-slate-950 font-semibold text-xs hover:shadow-neon-cyan hover:opacity-95 transition-all flex items-center space-x-2">
+                        <span>Get TCO Quote</span>
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="lg:hidden flex items-center">
+                    <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-300 hover:text-white p-2">
+                        <i class="fa-solid text-xl" :class="mobileMenuOpen ? 'fa-xmark' : 'fa-bars'"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu Dropdown -->
+        <div x-show="mobileMenuOpen" x-transition class="lg:hidden glass-panel border-b border-brand-border px-4 pt-2 pb-6 space-y-2">
+            <a @click="mobileMenuOpen = false" href="#home" class="block px-3 py-2 rounded-md text-gray-200 hover:bg-brand-surface">Home</a>
+            <a @click="mobileMenuOpen = false" href="#about" class="block px-3 py-2 rounded-md text-gray-200 hover:bg-brand-surface">About Us</a>
+            <a @click="mobileMenuOpen = false" href="#compute" class="block px-3 py-2 rounded-md text-gray-200 hover:bg-brand-surface">AI Compute Solutions</a>
+            <a @click="mobileMenuOpen = false" href="#infra" class="block px-3 py-2 rounded-md text-gray-200 hover:bg-brand-surface">AI Infrastructure</a>
+            <a @click="mobileMenuOpen = false" href="#optimization" class="block px-3 py-2 rounded-md text-gray-200 hover:bg-brand-surface">Model Optimization</a>
+            <a @click="mobileMenuOpen = false" href="#agentic" class="block px-3 py-2 rounded-md text-gray-200 hover:bg-brand-surface">Agentic AI</a>
+            <a @click="mobileMenuOpen = false" href="#delivery" class="block px-3 py-2 rounded-md text-gray-200 hover:bg-brand-surface">Delivery & Deployment</a>
+            <a @click="mobileMenuOpen = false" href="#tco" class="block px-3 py-2 rounded-md text-gray-200 hover:bg-brand-surface">TCO & Cost Optimization</a>
+            <a @click="mobileMenuOpen = false" href="#cases" class="block px-3 py-2 rounded-md text-gray-200 hover:bg-brand-surface">Case Studies</a>
+            <a @click="mobileMenuOpen = false" href="#faq" class="block px-3 py-2 rounded-md text-gray-200 hover:bg-brand-surface">FAQ</a>
+            <a @click="mobileMenuOpen = false" href="#contact" class="block text-center mt-4 px-4 py-2.5 rounded-lg bg-brand-cyan text-slate-950 font-bold">Contact Us & Get Quote</a>
+        </div>
+    </header>
+
+    <main class="relative z-10">
+
+        <!-- ==========================================
+             1. HOME SECTION
+        =========================================== -->
+        <section id="home" class="relative py-20 lg:py-32 overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid lg:grid-cols-12 gap-12 items-center">
+                    
+                    <!-- Left Hero Content -->
+                    <div class="lg:col-span-7 space-y-8">
+                        <div class="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-brand-cyan/10 border border-brand-cyan/30 text-brand-cyan text-xs font-mono">
+                            <span class="w-2 h-2 rounded-full bg-brand-cyan animate-pulse"></span>
+                            <span>Next-Gen Enterprise AI Infra Architecture</span>
+                        </div>
+                        
+                        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
+                            Global AI Compute Solutions & <span class="text-gradient">Full-Stack AI Engineering</span>
+                        </h1>
+                        
+                        <p class="text-lg text-gray-300 leading-relaxed max-w-2xl">
+                            Starfire aggregates <strong>100+ global data centers and compute supply factories</strong> into a unified, enterprise-ready infrastructure platform. Powered by NVIDIA HGX B300 (Blackwell Ultra) and backed by world-class AI engineers.
+                        </p>
+
+                        <!-- Key Metrics Grid -->
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 py-4 border-y border-brand-border/60">
+                            <div>
+                                <p class="text-3xl font-extrabold text-brand-cyan font-mono">100+</p>
+                                <p class="text-xs text-gray-400 mt-1">Data Center Nodes</p>
+                            </div>
+                            <div>
+                                <p class="text-3xl font-extrabold text-white font-mono">2,500+</p>
+                                <p class="text-xs text-gray-400 mt-1">Flagship GPU Cluster</p>
+                            </div>
+                            <div>
+                                <p class="text-3xl font-extrabold text-brand-emerald font-mono">99.98%</p>
+                                <p class="text-xs text-gray-400 mt-1">SLA Target Uptime</p>
+                            </div>
+                            <div>
+                                <p class="text-3xl font-extrabold text-brand-purple font-mono">2.1 TB</p>
+                                <p class="text-xs text-gray-400 mt-1">HBM3e GPU VRAM</p>
+                            </div>
+                        </div>
+
+                        <!-- CTAs -->
+                        <div class="flex flex-col sm:flex-row items-stretch sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
+                            <a href="#contact" class="px-8 py-4 rounded-xl bg-gradient-to-r from-brand-cyan via-brand-blue to-brand-purple text-slate-950 font-bold text-sm hover:shadow-neon-cyan transition-all text-center flex items-center justify-center space-x-3">
+                                <span>Request Compute Assessment</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                            <a href="#cases" class="px-8 py-4 rounded-xl glass-panel text-white font-semibold text-sm hover:bg-brand-card hover:border-brand-cyan/50 transition-all text-center flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-server text-brand-cyan"></i>
+                                <span>Explore 2,500 B300 Iceland Cluster</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Right Visual Card: Network & Hardware Architecture Preview -->
+                    <div class="lg:col-span-5">
+                        <div class="glass-panel p-6 rounded-2xl relative border border-brand-border shadow-2xl space-y-6">
+                            <div class="flex items-center justify-between border-b border-brand-border/60 pb-4">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                                    <span class="text-xs font-mono text-gray-400 ml-2">starfire-global-mesh-v2.6</span>
+                                </div>
+                                <span class="px-2 py-0.5 rounded bg-brand-emerald/20 text-brand-emerald text-[10px] font-mono">LIVE CLUSTER ACTIVE</span>
+                            </div>
+
+                            <!-- Interactive Specs Chip Showcase -->
+                            <div class="bg-brand-surface p-4 rounded-xl border border-brand-border/50 space-y-3">
+                                <div class="flex justify-between items-center text-xs font-mono">
+                                    <span class="text-gray-400">Node Architecture</span>
+                                    <span class="text-brand-cyan font-bold">NVIDIA HGX B300 SXM</span>
+                                </div>
+                                <div class="flex justify-between items-center text-xs font-mono">
+                                    <span class="text-gray-400">GPU Density / System</span>
+                                    <span class="text-white font-bold">8x Blackwell Ultra</span>
+                                </div>
+                                <div class="flex justify-between items-center text-xs font-mono">
+                                    <span class="text-gray-400">System NVLink Bandwidth</span>
+                                    <span class="text-brand-purple font-bold">14.4 TB/s</span>
+                                </div>
+                                <div class="flex justify-between items-center text-xs font-mono">
+                                    <span class="text-gray-400">System Network Fabric</span>
+                                    <span class="text-brand-blue font-bold">1.6 TB/s InfiniBand/RoCE</span>
+                                </div>
+                            </div>
+
+                            <!-- Visual Connectivity Diagram -->
+                            <div class="space-y-3">
+                                <div class="text-xs font-mono text-gray-400 flex items-center justify-between">
+                                    <span>GLOBAL RESOURCE ORCHESTRATION</span>
+                                    <span>100+ NODES</span>
+                                </div>
+                                <div class="grid grid-cols-3 gap-2 text-center text-[11px] font-mono">
+                                    <div class="p-2 rounded bg-brand-card border border-brand-border">
+                                        <p class="text-brand-cyan font-bold">Nordics Tier-3</p>
+                                        <p class="text-[9px] text-gray-400">Iceland Geothermal</p>
+                                    </div>
+                                    <div class="p-2 rounded bg-brand-card border border-brand-border">
+                                        <p class="text-brand-blue font-bold">APAC Hubs</p>
+                                        <p class="text-[9px] text-gray-400">Singapore / HK</p>
+                                    </div>
+                                    <div class="p-2 rounded bg-brand-card border border-brand-border">
+                                        <p class="text-brand-purple font-bold">Americas</p>
+                                        <p class="text-[9px] text-gray-400">US East/West</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==========================================
+             2. ABOUT US SECTION
+        =========================================== -->
+        <section id="about" class="py-20 border-t border-brand-border/60 bg-brand-surface/40">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+                <div class="text-center max-w-3xl mx-auto space-y-4">
+                    <h2 class="text-xs font-mono text-brand-cyan uppercase tracking-widest">About Starfire Technology</h2>
+                    <p class="text-3xl sm:text-4xl font-bold text-white">Connecting Fragmented Supply into Scalable Enterprise Capability</p>
+                    <p class="text-gray-300 text-sm sm:text-base leading-relaxed">
+                        Rather than simple resource aggregation, Starfire acts as a single, unified service window that transforms raw global GPU supply into guaranteed, production-ready compute clusters with full-stack technical management.
+                    </p>
+                </div>
+
+                <!-- 3 Pillars Grid -->
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="glass-panel p-8 rounded-2xl border border-brand-border hover:border-brand-cyan/50 transition-all space-y-4">
+                        <div class="w-12 h-12 rounded-xl bg-brand-cyan/10 flex items-center justify-center text-brand-cyan text-xl">
+                            <i class="fa-solid fa-network-wired"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Multi-Source Orchestration</h3>
+                        <p class="text-sm text-gray-300 leading-relaxed">
+                            Cross-partner screening across 100+ strategic data center partners eliminates single-supplier dependency while standardizing delivery protocols, SLA guarantees, and network topologies.
+                        </p>
+                    </div>
+
+                    <div class="glass-panel p-8 rounded-2xl border border-brand-border hover:border-brand-blue/50 transition-all space-y-4">
+                        <div class="w-12 h-12 rounded-xl bg-brand-blue/10 flex items-center justify-center text-brand-blue text-xl">
+                            <i class="fa-solid fa-earth-americas"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Regional & Compliance Match</h3>
+                        <p class="text-sm text-gray-300 leading-relaxed">
+                            Deploy exact cluster configurations in regions matching your enterprise requirements, regulatory compliance, data residency laws, and network latency targets.
+                        </p>
+                    </div>
+
+                    <div class="glass-panel p-8 rounded-2xl border border-brand-border hover:border-brand-purple/50 transition-all space-y-4">
+                        <div class="w-12 h-12 rounded-xl bg-brand-purple/10 flex items-center justify-center text-brand-purple text-xl">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Progressive Elastic Scaling</h3>
+                        <p class="text-sm text-gray-300 leading-relaxed">
+                            Seamlessly expand from initial POC validation and steady-state inference production to multi-node dedicated training clusters without environment re-architecture.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- World-Class Academic & Engineering Leadership -->
+                <div class="glass-panel p-8 sm:p-12 rounded-2xl border border-brand-border space-y-8">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-brand-border/60 pb-6">
+                        <div>
+                            <span class="text-xs font-mono text-brand-purple uppercase">Academic Excellence & Engineering Depth</span>
+                            <h3 class="text-2xl font-bold text-white mt-1">World-Class R&D and Infrastructure Engineering Team</h3>
+                        </div>
+                        <span class="px-4 py-2 rounded-full bg-brand-purple/20 text-brand-purple border border-brand-purple/40 font-mono text-xs font-semibold">
+                            Global Top University Talent
+                        </span>
+                    </div>
+
+                    <p class="text-gray-300 text-sm leading-relaxed">
+                        Our engineering team combines academic research depth with enterprise-scale production experience. Team members and academic advisors stem from top global research institutions including **University of Cambridge**, **UC Berkeley**, **Hong Kong University of Science and Technology (HKUST)**, **Fudan University**, and **Zhejiang University**.
+                    </p>
+
+                    <!-- Institution Badges Grid -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 pt-2">
+                        <div class="p-4 rounded-xl bg-brand-surface border border-brand-border/60 text-center space-y-1">
+                            <i class="fa-solid fa-graduation-cap text-brand-cyan text-lg mb-1"></i>
+                            <p class="text-xs font-bold text-white font-mono">Cambridge</p>
+                            <p class="text-[10px] text-gray-400">Distributed Systems</p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-brand-surface border border-brand-border/60 text-center space-y-1">
+                            <i class="fa-solid fa-graduation-cap text-brand-blue text-lg mb-1"></i>
+                            <p class="text-xs font-bold text-white font-mono">UC Berkeley</p>
+                            <p class="text-[10px] text-gray-400">AI Frameworks & Systems</p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-brand-surface border border-brand-border/60 text-center space-y-1">
+                            <i class="fa-solid fa-graduation-cap text-brand-purple text-lg mb-1"></i>
+                            <p class="text-xs font-bold text-white font-mono">HKUST</p>
+                            <p class="text-[10px] text-gray-400">Parallel Computing</p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-brand-surface border border-brand-border/60 text-center space-y-1">
+                            <i class="fa-solid fa-graduation-cap text-brand-emerald text-lg mb-1"></i>
+                            <p class="text-xs font-bold text-white font-mono">Fudan Univ.</p>
+                            <p class="text-[10px] text-gray-400">LLM & Quantization</p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-brand-surface border border-brand-border/60 text-center space-y-1">
+                            <i class="fa-solid fa-graduation-cap text-yellow-400 text-lg mb-1"></i>
+                            <p class="text-xs font-bold text-white font-mono">Zhejiang Univ.</p>
+                            <p class="text-[10px] text-gray-400">Agentic Orchestration</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==========================================
+             3. AI COMPUTE SOLUTIONS (HGX B300 FOCUS)
+        =========================================== -->
+        <section id="compute" class="py-20 border-t border-brand-border/60">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <div class="space-y-3">
+                        <span class="text-xs font-mono text-brand-cyan uppercase tracking-widest">Flagship Hardware Architecture</span>
+                        <h2 class="text-3xl sm:text-4xl font-bold text-white">NVIDIA HGX B300 (Blackwell Ultra)</h2>
+                        <p class="text-gray-300 text-sm max-w-2xl">
+                            Purpose-built for massive scale LLM inference, post-training, ultra-long context window processing, and high-performance multi-modal workloads.
+                        </p>
+                    </div>
+                    <span class="text-xs font-mono text-gray-400 bg-brand-surface px-3 py-1.5 rounded-lg border border-brand-border">
+                        * Specs based on official NVIDIA HGX platform specifications
+                    </span>
+                </div>
+
+                <!-- Specs Grid Highlight Cards -->
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="glass-panel p-6 rounded-2xl border border-brand-border space-y-3 hover:border-brand-cyan/60 transition-all">
+                        <div class="text-brand-cyan text-3xl font-mono font-extrabold">2.1 TB</div>
+                        <h4 class="text-sm font-bold text-white uppercase font-mono">Total System HBM3e Memory</h4>
+                        <p class="text-xs text-gray-300">
+                            HGX B300 8-GPU system memory capacity, supporting ultra-large model parameter loading and extreme context window length without out-of-memory bottlenecks.
+                        </p>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl border border-brand-border space-y-3 hover:border-brand-blue/60 transition-all">
+                        <div class="text-brand-blue text-3xl font-mono font-extrabold">14.4 TB/s</div>
+                        <h4 class="text-sm font-bold text-white uppercase font-mono">5th Gen NVLink Bandwidth</h4>
+                        <p class="text-xs text-gray-300">
+                            Ultra-high throughput GPU-to-GPU intra-node interconnect for zero-latency tensor parallelism and pipeline parallel execution.
+                        </p>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl border border-brand-border space-y-3 hover:border-brand-purple/60 transition-all">
+                        <div class="text-brand-purple text-3xl font-mono font-extrabold">1.6 TB/s</div>
+                        <h4 class="text-sm font-bold text-white uppercase font-mono">Inter-Node Fabric Bandwidth</h4>
+                        <p class="text-xs text-gray-300">
+                            High-speed system networking architecture laying the foundation for seamless horizontal cluster scaling across multi-node topology.
+                        </p>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl border border-brand-border space-y-3 hover:border-brand-emerald/60 transition-all">
+                        <div class="text-brand-emerald text-3xl font-mono font-extrabold">2x Gain</div>
+                        <h4 class="text-sm font-bold text-white uppercase font-mono">Attention Acceleration</h4>
+                        <p class="text-xs text-gray-300">
+                            Enhanced attention engine performance compared to baseline Blackwell, drastically reducing TTFT (Time-To-First-Token) in long-context inference.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Target Workloads Comparison Bar -->
+                <div class="glass-panel p-8 rounded-2xl border border-brand-border space-y-6">
+                    <h3 class="text-lg font-bold text-white flex items-center space-x-2">
+                        <i class="fa-solid fa-microchip text-brand-cyan"></i>
+                        <span>Optimal Enterprise Workload Alignment</span>
+                    </h3>
+
+                    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 text-sm">
+                        <div class="p-4 rounded-xl bg-brand-surface border border-brand-border/60 space-y-2">
+                            <span class="text-xs font-mono text-brand-cyan font-bold">WORKLOAD 01</span>
+                            <h4 class="font-bold text-white">LLM Inference & Post-Training</h4>
+                            <p class="text-xs text-gray-300">SFT, DPO, RLHF, and high-concurrency LLM production serving at reduced cost per million tokens.</p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-brand-surface border border-brand-border/60 space-y-2">
+                            <span class="text-xs font-mono text-brand-blue font-bold">WORKLOAD 02</span>
+                            <h4 class="font-bold text-white">Long-Context Window Models</h4>
+                            <p class="text-xs text-gray-300">128k+ to 1M token context window processing for complex document analysis, code repos, and legal AI.</p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-brand-surface border border-brand-border/60 space-y-2">
+                            <span class="text-xs font-mono text-brand-purple font-bold">WORKLOAD 03</span>
+                            <h4 class="font-bold text-white">Multimodal & High-Density HPC</h4>
+                            <p class="text-xs text-gray-300">Vision-Language models, video synthesis, scientific simulations, and large-scale parallel analytics.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==========================================
+             4. AI INFRASTRUCTURE (SERVICES)
+        =========================================== -->
+        <section id="infra" class="py-20 border-t border-brand-border/60 bg-brand-surface/40">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+                <div class="text-center max-w-3xl mx-auto space-y-4">
+                    <span class="text-xs font-mono text-brand-cyan uppercase tracking-widest">End-to-End Operational Guarantee</span>
+                    <h2 class="text-3xl sm:text-4xl font-bold text-white">Not Just Renting GPUs — Delivering Usable AI Infrastructure</h2>
+                    <p class="text-gray-300 text-sm">
+                        Raw compute without engineering is friction. Starfire delivers production-ready clusters equipped with complete software stacks, networking, storage pipelines, and active SLA monitoring.
+                    </p>
+                </div>
+
+                <!-- 6 Lifecycle Phases Grid -->
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="glass-panel p-6 rounded-2xl border border-brand-border space-y-4 hover:border-brand-cyan/50 transition-all">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-mono text-brand-cyan font-bold">PHASE 01</span>
+                            <i class="fa-solid fa-compass text-gray-400"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white">Architecture Design</h3>
+                        <p class="text-xs text-gray-300 leading-relaxed">
+                            Tailor-made compute, interconnect, and storage topology based on model parameters, target precision, QPS targets, and latency budgets.
+                        </p>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl border border-brand-border space-y-4 hover:border-brand-blue/50 transition-all">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-mono text-brand-blue font-bold">PHASE 02</span>
+                            <i class="fa-solid fa-sliders text-gray-400"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white">Standardized Deployment</h3>
+                        <p class="text-xs text-gray-300 leading-relaxed">
+                            Turnkey delivery of host OS, NVIDIA drivers, CUDA toolkits, Container engines (Docker/K8s), PyTorch, vLLM, TensorRT-LLM, and LMDeploy.
+                        </p>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl border border-brand-border space-y-4 hover:border-brand-purple/50 transition-all">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-mono text-brand-purple font-bold">PHASE 03</span>
+                            <i class="fa-solid fa-network-wired text-gray-400"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white">Cluster & Storage Interconnect</h3>
+                        <p class="text-xs text-gray-300 leading-relaxed">
+                            High-speed intra-node NVLink & inter-node InfiniBand setup paired with distributed NVMe storage pipelines for continuous dataset staging.
+                        </p>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl border border-brand-border space-y-4 hover:border-brand-emerald/50 transition-all">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-mono text-brand-emerald font-bold">PHASE 04</span>
+                            <i class="fa-solid fa-chart-line text-gray-400"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white">Real-Time Monitoring</h3>
+                        <p class="text-xs text-gray-300 leading-relaxed">
+                            Continuous monitoring of GPU utilization rate, VRAM fragmentation, throughput, job status, and TTFT metrics to maximize hardware efficiency.
+                        </p>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl border border-brand-border space-y-4 hover:border-brand-cyan/50 transition-all">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-mono text-brand-cyan font-bold">PHASE 05</span>
+                            <i class="fa-solid fa-shield-halved text-gray-400"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white">Fault Response & SLA</h3>
+                        <p class="text-xs text-gray-300 leading-relaxed">
+                            Proactive node replacement protocols, ticketing escalation paths, thermal management, and rapid hardware fault swap to minimize downtime.
+                        </p>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl border border-brand-border space-y-4 hover:border-brand-blue/50 transition-all">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-mono text-brand-blue font-bold">PHASE 06</span>
+                            <i class="fa-solid fa-arrow-right-arrow-left text-gray-400"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white">Seamless Workload Migration</h3>
+                        <p class="text-xs text-gray-300 leading-relaxed">
+                            Hands-on assistance migrating container images, model weights, checkpoints, and production traffic with minimal implementation friction.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==========================================
+             5. MODEL OPTIMIZATION
+        =========================================== -->
+        <section id="optimization" class="py-20 border-t border-brand-border/60">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+                <div class="grid lg:grid-cols-12 gap-12 items-center">
+                    
+                    <div class="lg:col-span-6 space-y-6">
+                        <span class="text-xs font-mono text-brand-cyan uppercase tracking-widest">Performance & Throughput Tuning</span>
+                        <h2 class="text-3xl sm:text-4xl font-bold text-white">Maximizing Token Throughput Per Dollar Spent</h2>
+                        <p class="text-gray-300 text-sm leading-relaxed">
+                            Compute cost is governed not only by chip rental price but by execution efficiency. Our specialized optimization team fine-tunes training and inference workloads to extract peak performance from hardware.
+                        </p>
+
+                        <div class="space-y-4 pt-2">
+                            <div class="flex items-start space-x-4">
+                                <div class="w-8 h-8 rounded-lg bg-brand-cyan/20 text-brand-cyan flex items-center justify-center shrink-0 mt-1">
+                                    <i class="fa-solid fa-gauge-high text-xs"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-white">Training & Fine-Tuning Acceleration</h4>
+                                    <p class="text-xs text-gray-300">Implementation of 3D parallelism (Tensor, Pipeline, ZeRO Data Parallelism), FlashAttention-3, and custom SFT/RLHF tuning.</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start space-x-4">
+                                <div class="w-8 h-8 rounded-lg bg-brand-blue/20 text-brand-blue flex items-center justify-center shrink-0 mt-1">
+                                    <i class="fa-solid fa-compress text-xs"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-white">Precision Quantization (FP8 / INT8 / INT4)</h4>
+                                    <p class="text-xs text-gray-300">Low-bit quantization strategies preserving model accuracy thresholds while halving VRAM footprint and boosting inference QPS.</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start space-x-4">
+                                <div class="w-8 h-8 rounded-lg bg-brand-purple/20 text-brand-purple flex items-center justify-center shrink-0 mt-1">
+                                    <i class="fa-solid fa-bolt text-xs"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-white">Inference Engine Tuning (vLLM / TensorRT-LLM)</h4>
+                                    <p class="text-xs text-gray-300">PagedAttention, KV-Cache compression, dynamic batching, and chunked prefill tuning to minimize latency.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Optimization Comparison Box -->
+                    <div class="lg:col-span-6">
+                        <div class="glass-panel p-8 rounded-2xl border border-brand-border space-y-6">
+                            <h3 class="text-base font-bold text-white font-mono flex items-center justify-between border-b border-brand-border/60 pb-4">
+                                <span>PERFORMANCE BENCHMARK GAINS</span>
+                                <span class="text-xs text-brand-cyan">TYPICAL UNTUNED VS STARFIRE OPTIMIZED</span>
+                            </h3>
+
+                            <!-- Progress Bar 1 -->
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-xs font-mono">
+                                    <span class="text-gray-300">Inference Token Throughput (Tokens/sec)</span>
+                                    <span class="text-brand-emerald font-bold">+180% Higher</span>
+                                </div>
+                                <div class="w-full h-3 rounded-full bg-brand-surface overflow-hidden p-0.5 border border-brand-border">
+                                    <div class="h-full rounded-full bg-gradient-to-r from-brand-blue to-brand-emerald w-[85%]"></div>
+                                </div>
+                            </div>
+
+                            <!-- Progress Bar 2 -->
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-xs font-mono">
+                                    <span class="text-gray-300">GPU VRAM Footprint Reduction</span>
+                                    <span class="text-brand-cyan font-bold">-45% Memory Usage</span>
+                                </div>
+                                <div class="w-full h-3 rounded-full bg-brand-surface overflow-hidden p-0.5 border border-brand-border">
+                                    <div class="h-full rounded-full bg-gradient-to-r from-brand-purple to-brand-cyan w-[60%]"></div>
+                                </div>
+                            </div>
+
+                            <!-- Progress Bar 3 -->
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-xs font-mono">
+                                    <span class="text-gray-300">Effective Cost Per Million Tokens</span>
+                                    <span class="text-brand-purple font-bold">~35% Cost Reduction</span>
+                                </div>
+                                <div class="w-full h-3 rounded-full bg-brand-surface overflow-hidden p-0.5 border border-brand-border">
+                                    <div class="h-full rounded-full bg-gradient-to-r from-brand-cyan to-brand-purple w-[65%]"></div>
+                                </div>
+                            </div>
+
+                            <p class="text-[11px] text-gray-400 italic">
+                                * Measurements derived from internal vLLM / TensorRT-LLM benchmarks on Llama-3 70B & DeepSeek models.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==========================================
+             6. AGENTIC AI
+        =========================================== -->
+        <section id="agentic" class="py-20 border-t border-brand-border/60 bg-brand-surface/40">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+                <div class="text-center max-w-3xl mx-auto space-y-4">
+                    <span class="text-xs font-mono text-brand-purple uppercase tracking-widest">Enterprise AI Application Engineering</span>
+                    <h2 class="text-3xl sm:text-4xl font-bold text-white">Agentic AI & Multi-Agent Workflow Orchestration</h2>
+                    <p class="text-gray-300 text-sm">
+                        Transitioning static LLMs into enterprise-grade autonomous agent systems capable of multi-step planning, tool utilization, and enterprise knowledge integration.
+                    </p>
+                </div>
+
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="glass-panel p-6 rounded-2xl border border-brand-border space-y-4">
+                        <div class="w-10 h-10 rounded-lg bg-brand-cyan/20 text-brand-cyan flex items-center justify-center font-bold">01</div>
+                        <h3 class="text-lg font-bold text-white">RAG & Knowledge Retrieval</h3>
+                        <p class="text-xs text-gray-300 leading-relaxed">
+                            Hybrid vector search, reranking, and dynamic context window staging to connect enterprise knowledge bases to LLM engines securely.
+                        </p>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl border border-brand-border space-y-4">
+                        <div class="w-10 h-10 rounded-lg bg-brand-blue/20 text-brand-blue flex items-center justify-center font-bold">02</div>
+                        <h3 class="text-lg font-bold text-white">Tool Calling & API Integration</h3>
+                        <p class="text-xs text-gray-300 leading-relaxed">
+                            Robust function calling execution, structured output schemas, external database connections, and fail-safe exception handles.
+                        </p>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl border border-brand-border space-y-4">
+                        <div class="w-10 h-10 rounded-lg bg-brand-purple/20 text-brand-purple flex items-center justify-center font-bold">03</div>
+                        <h3 class="text-lg font-bold text-white">Multi-Agent Collaboration</h3>
+                        <p class="text-xs text-gray-300 leading-relaxed">
+                            Role-based agent delegation, state management, inter-agent communication protocols, and complex task decomposition pipelines.
+                        </p>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl border border-brand-border space-y-4">
+                        <div class="w-10 h-10 rounded-lg bg-brand-emerald/20 text-brand-emerald flex items-center justify-center font-bold">04</div>
+                        <h3 class="text-lg font-bold text-white">Governance & Guardrails</h3>
+                        <p class="text-xs text-gray-300 leading-relaxed">
+                            Input/output content filtering, safety alignment, step-by-step reasoning audit logs, and enterprise compliance monitoring.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==========================================
+             7. DELIVERY & DEPLOYMENT MODELS
+        =========================================== -->
+        <section id="delivery" class="py-20 border-t border-brand-border/60">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <div class="space-y-3">
+                        <span class="text-xs font-mono text-brand-cyan uppercase tracking-widest">Flexible Engagement Models</span>
+                        <h2 class="text-3xl sm:text-4xl font-bold text-white">Resource Scaling Built for Every Growth Stage</h2>
+                        <p class="text-gray-300 text-sm max-w-2xl">
+                            Match compute commitments with business milestones. We eliminate mandatory long-term lock-ins during early verification phases.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 4 Stage Delivery Models Grid -->
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Model 1 -->
+                    <div class="glass-panel p-6 rounded-2xl border border-brand-border space-y-4 relative flex flex-col justify-between hover:border-brand-cyan transition-all">
+                        <div class="space-y-3">
+                            <span class="px-2.5 py-1 rounded-md bg-brand-cyan/20 text-brand-cyan text-[10px] font-mono font-bold">01 / POC VALIDATION</span>
+                            <h3 class="text-lg font-bold text-white">Short-Term Rental</h3>
+                            <p class="text-xs text-gray-300 leading-relaxed">
+                                Model loading, benchmark testing, framework compatibility verification, and business feasibility tests.
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-brand-border/60 text-[11px] text-gray-400 font-mono">
+                            <span class="text-brand-cyan font-bold">Ideal for:</span> AI Labs, Algorithm Teams, POC Projects
+                        </div>
+                    </div>
+
+                    <!-- Model 2 -->
+                    <div class="glass-panel p-6 rounded-2xl border border-brand-border space-y-4 relative flex flex-col justify-between hover:border-brand-blue transition-all">
+                        <div class="space-y-3">
+                            <span class="px-2.5 py-1 rounded-md bg-brand-blue/20 text-brand-blue text-[10px] font-mono font-bold">02 / PRODUCTION</span>
+                            <h3 class="text-lg font-bold text-white">Steady-State Production</h3>
+                            <p class="text-xs text-gray-300 leading-relaxed">
+                                Weekly or monthly reserved capacity balancing strict uptime availability, performance, and operational budget.
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-brand-border/60 text-[11px] text-gray-400 font-mono">
+                            <span class="text-brand-blue font-bold">Ideal for:</span> Online Inference, SFT Fine-Tuning, SaaS
+                        </div>
+                    </div>
+
+                    <!-- Model 3 -->
+                    <div class="glass-panel p-6 rounded-2xl border border-brand-border space-y-4 relative flex flex-col justify-between hover:border-brand-purple transition-all">
+                        <div class="space-y-3">
+                            <span class="px-2.5 py-1 rounded-md bg-brand-purple/20 text-brand-purple text-[10px] font-mono font-bold">03 / DEDICATED</span>
+                            <h3 class="text-lg font-bold text-white">Dedicated Isolated Nodes</h3>
+                            <p class="text-xs text-gray-300 leading-relaxed">
+                                Single-tenant exclusive nodes providing environment lock-in, zero multi-tenant noisy neighbors, and strict data security.
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-brand-border/60 text-[11px] text-gray-400 font-mono">
+                            <span class="text-brand-purple font-bold">Ideal for:</span> Core Models, Sensitive Enterprise Data
+                        </div>
+                    </div>
+
+                    <!-- Model 4 -->
+                    <div class="glass-panel p-6 rounded-2xl border border-brand-border space-y-4 relative flex flex-col justify-between hover:border-brand-emerald transition-all">
+                        <div class="space-y-3">
+                            <span class="px-2.5 py-1 rounded-md bg-brand-emerald/20 text-brand-emerald text-[10px] font-mono font-bold">04 / CLUSTER</span>
+                            <h3 class="text-lg font-bold text-white">Multi-Node Clusters</h3>
+                            <p class="text-xs text-gray-300 leading-relaxed">
+                                High-speed InfiniBand network topology, shared distributed NVMe storage, and Slurm/K8s job orchestration for scale-out AI.
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-brand-border/60 text-[11px] text-gray-400 font-mono">
+                            <span class="text-brand-emerald font-bold">Ideal for:</span> Foundation Model Pre-Training, Large Parallel
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4-Step Delivery Loop Timeline -->
+                <div class="glass-panel p-8 rounded-2xl border border-brand-border space-y-6">
+                    <h3 class="text-lg font-bold text-white font-mono flex items-center space-x-2">
+                        <i class="fa-solid fa-arrows-spin text-brand-cyan"></i>
+                        <span>Four-Step Delivery Loop into Production</span>
+                    </h3>
+
+                    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 text-xs">
+                        <div class="space-y-2 border-l-2 border-brand-cyan pl-4 py-1">
+                            <span class="font-mono text-brand-cyan font-bold">01. Requirement Assessment</span>
+                            <p class="text-gray-300">Model size, batch concurrency, precision, latency budget, data privacy, and region selection.</p>
+                        </div>
+                        <div class="space-y-2 border-l-2 border-brand-blue pl-4 py-1">
+                            <span class="font-mono text-brand-blue font-bold">02. Resource Matching</span>
+                            <p class="text-gray-300">Bidding across 100+ partner nodes to match hardware specs, cost, delivery timeframe, and SLAs.</p>
+                        </div>
+                        <div class="space-y-2 border-l-2 border-brand-purple pl-4 py-1">
+                            <span class="font-mono text-brand-purple font-bold">03. Deployment & Testing</span>
+                            <p class="text-gray-300">Environment configuration, CUDA drivers, network fabric testing, and baseline benchmark acceptance.</p>
+                        </div>
+                        <div class="space-y-2 border-l-2 border-brand-emerald pl-4 py-1">
+                            <span class="font-mono text-brand-emerald font-bold">04. Continuous Optimization</span>
+                            <p class="text-gray-300">Ongoing monitoring of utilization rates, memory efficiency, and capacity adjustment.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==========================================
+             8. TCO & COST OPTIMIZATION (INTERACTIVE)
+        =========================================== -->
+        <section id="tco" class="py-20 border-t border-brand-border/60 bg-brand-surface/40">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+                <div class="text-center max-w-3xl mx-auto space-y-4">
+                    <span class="text-xs font-mono text-brand-emerald uppercase tracking-widest">Enterprise Value Engineering</span>
+                    <h2 class="text-3xl sm:text-4xl font-bold text-white">Systemic TCO Optimization Framework</h2>
+                    <p class="text-gray-300 text-sm">
+                        Lowering total cost of ownership is not just asking for lower hourly rates — it is optimizing procurement sourcing, contract commitments, hardware matching, and runtime utilization.
+                    </p>
+                </div>
+
+                <!-- Interactive TCO Estimator Widget -->
+                <div class="glass-panel p-8 sm:p-10 rounded-2xl border border-brand-border space-y-8">
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-b border-brand-border/60 pb-6">
+                        <div>
+                            <h3 class="text-xl font-bold text-white font-mono flex items-center space-x-2">
+                                <i class="fa-solid fa-calculator text-brand-emerald"></i>
+                                <span>Interactive TCO & Savings Calculator</span>
+                            </h3>
+                            <p class="text-xs text-gray-300 mt-1">Estimate your cost reduction compared to standard hyperscaler public cloud pricing.</p>
+                        </div>
+                        <span class="text-xs font-mono px-3 py-1.5 rounded bg-brand-emerald/20 text-brand-emerald border border-brand-emerald/40">
+                            Up to 35-45% TCO Savings
+                        </span>
+                    </div>
+
+                    <div class="grid lg:grid-cols-12 gap-8 items-center">
+                        <!-- Inputs -->
+                        <div class="lg:col-span-7 space-y-6">
+                            <!-- GPU Architecture Selection -->
+                            <div class="space-y-2">
+                                <label class="text-xs font-mono text-gray-300 uppercase">GPU Architecture</label>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <button @click="calculator.gpuType = 'b300'" :class="calculator.gpuType === 'b300' ? 'bg-brand-cyan/20 border-brand-cyan text-white' : 'bg-brand-surface border-brand-border text-gray-400'" class="p-3 rounded-xl border text-xs font-mono font-bold text-left transition-all">
+                                        NVIDIA HGX B300 (Blackwell Ultra)
+                                    </button>
+                                    <button @click="calculator.gpuType = 'h100'" :class="calculator.gpuType === 'h100' ? 'bg-brand-cyan/20 border-brand-cyan text-white' : 'bg-brand-surface border-brand-border text-gray-400'" class="p-3 rounded-xl border text-xs font-mono font-bold text-left transition-all">
+                                        NVIDIA HGX H100 / H200 Cluster
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- GPU Count Slider -->
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-xs font-mono">
+                                    <span class="text-gray-300">GPU Cluster Size</span>
+                                    <span class="text-brand-cyan font-bold" x-text="calculator.gpuCount + ' GPUs'"></span>
+                                </div>
+                                <input type="range" min="16" max="1024" step="16" x-model.number="calculator.gpuCount" class="w-full accent-brand-cyan bg-brand-surface cursor-pointer">
+                            </div>
+
+                            <!-- Duration Slider -->
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-xs font-mono">
+                                    <span class="text-gray-300">Commitment Period</span>
+                                    <span class="text-brand-blue font-bold" x-text="calculator.durationMonths + ' Months'"></span>
+                                </div>
+                                <input type="range" min="1" max="36" step="1" x-model.number="calculator.durationMonths" class="w-full accent-brand-blue bg-brand-surface cursor-pointer">
+                            </div>
+                        </div>
+
+                        <!-- Live Calculation Output Box -->
+                        <div class="lg:col-span-5 bg-brand-surface p-6 rounded-xl border border-brand-border space-y-6">
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center text-xs">
+                                    <span class="text-gray-400">Estimated Public Cloud Spend</span>
+                                    <span class="text-red-400 font-mono font-bold" x-text="'$' + calculator.calculateTCO().cloudCost"></span>
+                                </div>
+
+                                <div class="flex justify-between items-center text-xs">
+                                    <span class="text-gray-400">Starfire Optimized Spend</span>
+                                    <span class="text-brand-cyan font-mono font-bold" x-text="'$' + calculator.calculateTCO().starfireCost"></span>
+                                </div>
+
+                                <div class="pt-4 border-t border-brand-border/80 space-y-1">
+                                    <span class="text-xs font-mono text-gray-300">Estimated Total Capital Savings</span>
+                                    <div class="text-3xl font-extrabold text-brand-emerald font-mono" x-text="'$' + calculator.calculateTCO().savings"></div>
+                                    <span class="text-[11px] text-brand-emerald font-mono" x-text="'~' + calculator.calculateTCO().savingsPercent + '% Cost Reduction'"></span>
+                                </div>
+                            </div>
+
+                            <a href="#contact" class="block w-full py-3 rounded-xl bg-brand-emerald text-slate-950 text-center font-bold text-xs hover:opacity-90 transition-opacity">
+                                Lock in Custom TCO Assessment
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==========================================
+             9. CASE STUDIES (FLAGSHIP ICELAND CLUSTER)
+        =========================================== -->
+        <section id="cases" class="py-20 border-t border-brand-border/60">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <div class="space-y-3">
+                        <span class="text-xs font-mono text-brand-cyan uppercase tracking-widest">Flagship Customer Deployment</span>
+                        <h2 class="text-3xl sm:text-4xl font-bold text-white">Case Study: 2,500x NVIDIA B300 Iceland Green Energy Cluster</h2>
+                        <p class="text-gray-300 text-sm max-w-2xl">
+                            Deploying a massive high-density compute cluster for a Tier-1 European AI enterprise requiring long-term capacity, extreme reliability, and sustainable energy sourcing.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Flagship Case Study Panel -->
+                <div class="glass-panel p-8 sm:p-12 rounded-2xl border border-brand-border space-y-8 relative overflow-hidden">
+                    <!-- Background Accent Badge -->
+                    <div class="absolute top-0 right-0 bg-brand-cyan/10 border-b border-l border-brand-cyan/30 px-4 py-2 rounded-bl-2xl font-mono text-xs text-brand-cyan font-bold">
+                        TIER 3 DATA CENTER | ICELAND
+                    </div>
+
+                    <!-- Metrics Grid -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 pt-4">
+                        <div class="p-4 rounded-xl bg-brand-surface border border-brand-border">
+                            <p class="text-xs text-gray-400 font-mono">Cluster Size</p>
+                            <p class="text-2xl sm:text-3xl font-extrabold text-white font-mono mt-1">2,500</p>
+                            <p class="text-[10px] text-brand-cyan">NVIDIA B300 GPUs</p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-brand-surface border border-brand-border">
+                            <p class="text-xs text-gray-400 font-mono">Contract Term</p>
+                            <p class="text-2xl sm:text-3xl font-extrabold text-brand-blue font-mono mt-1">60 Months</p>
+                            <p class="text-[10px] text-gray-400">Long-term Strategic</p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-brand-surface border border-brand-border">
+                            <p class="text-xs text-gray-400 font-mono">Availability SLA</p>
+                            <p class="text-2xl sm:text-3xl font-extrabold text-brand-emerald font-mono mt-1">99.982%</p>
+                            <p class="text-[10px] text-gray-400">Uptime Guaranteed</p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-brand-surface border border-brand-border">
+                            <p class="text-xs text-gray-400 font-mono">Energy Sourcing</p>
+                            <p class="text-2xl sm:text-3xl font-extrabold text-brand-purple font-mono mt-1">100%</p>
+                            <p class="text-[10px] text-gray-400">Geothermal & Hydro</p>
+                        </div>
+                    </div>
+
+                    <!-- Hybrid Cooling Deployment Strategy -->
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="p-6 rounded-xl bg-brand-surface border border-brand-border space-y-3">
+                            <div class="flex items-center justify-between">
+                                <h4 class="font-bold text-white font-mono">Cluster A: 1,024 GPUs</h4>
+                                <span class="px-2 py-0.5 rounded bg-brand-cyan/20 text-brand-cyan text-[10px] font-mono">AIR-COOLED</span>
+                            </div>
+                            <p class="text-xs text-gray-300 leading-relaxed">
+                                Standard rack deployment engineered for rapid commissioning, flexible operational scaling, and production inference environments.
+                            </p>
+                        </div>
+
+                        <div class="p-6 rounded-xl bg-brand-surface border border-brand-border space-y-3">
+                            <div class="flex items-center justify-between">
+                                <h4 class="font-bold text-white font-mono">Cluster B: 1,476 GPUs</h4>
+                                <span class="px-2 py-0.5 rounded bg-brand-purple/20 text-brand-purple text-[10px] font-mono">LIQUID-COOLED</span>
+                            </div>
+                            <p class="text-xs text-gray-300 leading-relaxed">
+                                Ultra-high density liquid cooling deployment designed to handle maximum sustained TDP thermal dissipation for continuous heavy LLM pre-training.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-brand-border/60 pt-6 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-400">
+                        <span>Clients served include strategic AIGC enterprises, Dofuyo, and global model labs.</span>
+                        <span class="italic text-[11px] mt-2 sm:mt-0">* Commercial pricing & detailed entity identities subject to NDA.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==========================================
+             10. FAQ SECTION
+        =========================================== -->
+        <section id="faq" class="py-20 border-t border-brand-border/60 bg-brand-surface/40">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12" x-data="{ openFaq: 1 }">
+                <div class="text-center space-y-4">
+                    <span class="text-xs font-mono text-brand-cyan uppercase tracking-widest">Frequently Asked Questions</span>
+                    <h2 class="text-3xl sm:text-4xl font-bold text-white">Technical & Procurement FAQ</h2>
+                </div>
+
+                <div class="space-y-4">
+                    <!-- FAQ 1 -->
+                    <div class="glass-panel rounded-xl border border-brand-border overflow-hidden">
+                        <button @click="openFaq = (openFaq === 1 ? null : 1)" class="w-full p-6 text-left flex justify-between items-center font-bold text-white text-sm">
+                            <span>What GPU systems are available in the Starfire resource pool?</span>
+                            <i class="fa-solid" :class="openFaq === 1 ? 'fa-chevron-up text-brand-cyan' : 'fa-chevron-down text-gray-400'"></i>
+                        </button>
+                        <div x-show="openFaq === 1" x-transition class="p-6 pt-0 text-xs text-gray-300 leading-relaxed border-t border-brand-border/40">
+                            Our flagship architecture is the NVIDIA HGX B300 (8x Blackwell Ultra SXM with 2.1 TB HBM3e VRAM). We also aggregate H100, H200, and specialized high-density clusters across 100+ global partner data center nodes.
+                        </div>
+                    </div>
+
+                    <!-- FAQ 2 -->
+                    <div class="glass-panel rounded-xl border border-brand-border overflow-hidden">
+                        <button @click="openFaq = (openFaq === 2 ? null : 2)" class="w-full p-6 text-left flex justify-between items-center font-bold text-white text-sm">
+                            <span>What software stack is delivered out-of-the-box?</span>
+                            <i class="fa-solid" :class="openFaq === 2 ? 'fa-chevron-up text-brand-cyan' : 'fa-chevron-down text-gray-400'"></i>
+                        </button>
+                        <div x-show="openFaq === 2" x-transition class="p-6 pt-0 text-xs text-gray-300 leading-relaxed border-t border-brand-border/40">
+                            We deliver fully operational environments including Linux host OS, NVIDIA drivers, CUDA/cuDNN toolkits, Docker & Kubernetes container runtimes, PyTorch/JAX frameworks, and optimized inference engines like vLLM, TensorRT-LLM, and LMDeploy.
+                        </div>
+                    </div>
+
+                    <!-- FAQ 3 -->
+                    <div class="glass-panel rounded-xl border border-brand-border overflow-hidden">
+                        <button @click="openFaq = (openFaq === 3 ? null : 3)" class="w-full p-6 text-left flex justify-between items-center font-bold text-white text-sm">
+                            <span>How does Starfire achieve a lower TCO compared to major public clouds?</span>
+                            <i class="fa-solid" :class="openFaq === 3 ? 'fa-chevron-up text-brand-cyan' : 'fa-chevron-down text-gray-400'"></i>
+                        </button>
+                        <div x-show="openFaq === 3" x-transition class="p-6 pt-0 text-xs text-gray-300 leading-relaxed border-t border-brand-border/40">
+                            By combining multi-source bidding across 100+ data center partners, flexible commitment models (POC to 60-month reserved), exact hardware-workload right-sizing, and model-level quantization/kernel optimizations that maximize tokens per second per GPU.
+                        </div>
+                    </div>
+
+                    <!-- FAQ 4 -->
+                    <div class="glass-panel rounded-xl border border-brand-border overflow-hidden">
+                        <button @click="openFaq = (openFaq === 4 ? null : 4)" class="w-full p-6 text-left flex justify-between items-center font-bold text-white text-sm">
+                            <span>What SLA guarantees and fault response procedures are provided?</span>
+                            <i class="fa-solid" :class="openFaq === 4 ? 'fa-chevron-up text-brand-cyan' : 'fa-chevron-down text-gray-400'"></i>
+                        </button>
+                        <div x-show="openFaq === 4" x-transition class="p-6 pt-0 text-xs text-gray-300 leading-relaxed border-t border-brand-border/40">
+                            We offer up to 99.982% uptime SLAs for dedicated clusters. Our monitoring system tracks hardware health, thermal metrics, and job execution 24/7, with rapid automated ticketing and physical hardware swapping paths to eliminate downtime.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==========================================
+             11. CONTACT US & ASSESSMENT WIZARD
+        =========================================== -->
+        <section id="contact" class="py-20 border-t border-brand-border/60">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+                <div class="grid lg:grid-cols-12 gap-12">
+                    
+                    <!-- Left Info Side -->
+                    <div class="lg:col-span-5 space-y-8">
+                        <div class="space-y-4">
+                            <span class="text-xs font-mono text-brand-cyan uppercase tracking-widest">Connect With Our Engineering Team</span>
+                            <h2 class="text-3xl sm:text-4xl font-bold text-white">Powering Your Next-Gen AI Workload</h2>
+                            <p class="text-gray-300 text-sm leading-relaxed">
+                                Tell us your model scale, operational goals, and region preference. Our AI Infrastructure team will complete a tailored resource match, technical architecture, and TCO proposal.
+                            </p>
+                        </div>
+
+                        <div class="space-y-4 pt-4 border-t border-brand-border/60">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-10 h-10 rounded-xl bg-brand-surface border border-brand-border flex items-center justify-center text-brand-cyan">
+                                    <i class="fa-solid fa-envelope"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-400">Enterprise Business Inquiry</p>
+                                    <p class="text-sm font-bold text-white font-mono">business@starfire.ai</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center space-x-4">
+                                <div class="w-10 h-10 rounded-xl bg-brand-surface border border-brand-border flex items-center justify-center text-brand-blue">
+                                    <i class="fa-solid fa-building"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-400">Global HQ</p>
+                                    <p class="text-sm font-bold text-white">Starfire Technology Pte. Ltd., Singapore</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Step-by-Step Interactive Form -->
+                    <div class="lg:col-span-7">
+                        <div class="glass-panel p-8 rounded-2xl border border-brand-border space-y-6">
+                            
+                            <div class="flex items-center justify-between border-b border-brand-border/60 pb-4">
+                                <h3 class="text-lg font-bold text-white font-mono">AI Compute & TCO Assessment Form</h3>
+                                <span class="text-xs font-mono text-brand-cyan">Step <span x-text="quoteWizard.step"></span> of 2</span>
+                            </div>
+
+                            <!-- Success Screen -->
+                            <template x-if="quoteWizard.submitted">
+                                <div class="py-12 text-center space-y-4">
+                                    <div class="w-16 h-16 rounded-full bg-brand-emerald/20 text-brand-emerald flex items-center justify-center text-2xl mx-auto">
+                                        <i class="fa-solid fa-check"></i>
+                                    </div>
+                                    <h4 class="text-xl font-bold text-white">Assessment Request Received</h4>
+                                    <p class="text-xs text-gray-300 max-w-md mx-auto">
+                                        Our AI Infrastructure team will review your requirements and respond within 24 business hours with a resource evaluation and TCO estimate.
+                                    </p>
+                                </div>
+                            </template>
+
+                            <!-- Form Content -->
+                            <template x-if="!quoteWizard.submitted">
+                                <div class="space-y-6">
+                                    
+                                    <!-- Step 1 -->
+                                    <div x-show="quoteWizard.step === 1" class="space-y-4">
+                                        <div class="space-y-2">
+                                            <label class="text-xs font-mono text-gray-300">01. Primary AI Workload Type</label>
+                                            <select x-model="quoteWizard.workload" class="w-full p-3 rounded-xl bg-brand-surface border border-brand-border text-xs font-mono text-white focus:border-brand-cyan outline-none">
+                                                <option>LLM Inference & Fine-Tuning</option>
+                                                <option>Foundation Model Pre-Training</option>
+                                                <option>Long-Context Window Workload</option>
+                                                <option>Agentic AI & RAG Pipeline</option>
+                                                <option>Multi-Modal / Scientific HPC</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="space-y-2">
+                                            <label class="text-xs font-mono text-gray-300">02. Estimated GPU Scale</label>
+                                            <select x-model="quoteWizard.gpus" class="w-full p-3 rounded-xl bg-brand-surface border border-brand-border text-xs font-mono text-white focus:border-brand-cyan outline-none">
+                                                <option>8 - 32 GPUs (POC Validation)</option>
+                                                <option>64 - 256 GPUs (Production Node)</option>
+                                                <option>512 - 2,500+ GPUs (Dedicated Cluster)</option>
+                                            </select>
+                                        </div>
+
+                                        <button @click="quoteWizard.step = 2" class="w-full py-3.5 rounded-xl bg-brand-cyan text-slate-950 font-bold text-xs hover:shadow-neon-cyan transition-all flex items-center justify-center space-x-2">
+                                            <span>Continue to Contact Details</span>
+                                            <i class="fa-solid fa-arrow-right"></i>
+                                        </button>
+                                    </div>
+
+                                    <!-- Step 2 -->
+                                    <div x-show="quoteWizard.step === 2" class="space-y-4">
+                                        <div class="space-y-2">
+                                            <label class="text-xs font-mono text-gray-300">03. Target Region / Power Preference</label>
+                                            <select x-model="quoteWizard.region" class="w-full p-3 rounded-xl bg-brand-surface border border-brand-border text-xs font-mono text-white focus:border-brand-cyan outline-none">
+                                                <option>Iceland / Europe (100% Green Power)</option>
+                                                <option>Asia-Pacific (Singapore Hub)</option>
+                                                <option>Americas (US East / West)</option>
+                                                <option>Lowest Latency / Multi-Region</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="space-y-2">
+                                            <label class="text-xs font-mono text-gray-300">04. Work Email Address</label>
+                                            <input type="email" x-model="quoteWizard.email" placeholder="cto@yourcompany.ai" class="w-full p-3 rounded-xl bg-brand-surface border border-brand-border text-xs font-mono text-white focus:border-brand-cyan outline-none">
+                                        </div>
+
+                                        <div class="flex space-x-3">
+                                            <button @click="quoteWizard.step = 1" class="w-1/3 py-3.5 rounded-xl glass-panel text-gray-300 font-bold text-xs">
+                                                Back
+                                            </button>
+                                            <button @click="quoteWizard.submitted = true" class="w-2/3 py-3.5 rounded-xl bg-gradient-to-r from-brand-cyan to-brand-blue text-slate-950 font-bold text-xs hover:shadow-neon-cyan transition-all">
+                                                Submit TCO Request
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </template>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ==========================================
+         GLOBAL FOOTER
+    =========================================== -->
+    <footer class="border-t border-brand-border/80 bg-brand-surface py-12 text-xs text-gray-400">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 rounded bg-brand-cyan flex items-center justify-center text-slate-950 font-bold">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <span class="text-base font-bold text-white font-mono">STARFIRE TECHNOLOGY PTE. LTD.</span>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-6">
+                    <a href="#home" class="hover:text-white transition-colors">Home</a>
+                    <a href="#about" class="hover:text-white transition-colors">About Us</a>
+                    <a href="#compute" class="hover:text-white transition-colors">NVIDIA B300</a>
+                    <a href="#tco" class="hover:text-white transition-colors">TCO Savings</a>
+                    <a href="#cases" class="hover:text-white transition-colors">2,500 GPU Cluster</a>
+                    <a href="#contact" class="hover:text-white transition-colors">Contact</a>
+                </div>
+            </div>
+
+            <div class="border-t border-brand-border/60 pt-6 flex flex-col sm:flex-row justify-between items-center text-[11px] gap-4">
+                <p>&copy; 2026 Starfire Technology Pte. Ltd. All Rights Reserved. Global AI Compute Infrastructure.</p>
+                <div class="flex space-x-4">
+                    <span>Singapore HQ</span>
+                    <span>Iceland Tier-3 Hub</span>
+                    <span>100+ Network Nodes</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
